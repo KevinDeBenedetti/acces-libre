@@ -19,7 +19,7 @@ Utilisez la fonction de recherche pour trouver des établissements PMR dans une 
 - [x] Affichage sur la carte de la commune recherché
 - [x] Affichage de la position (si autorisé)
 - [x] Affichage des établissements
-- [x] Marqueurs personnalisés
+- [] Marqueurs personnalisés
 
 ## Comment Utiliser Accès Libre
 
