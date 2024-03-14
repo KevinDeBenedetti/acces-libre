@@ -24,12 +24,10 @@ const items = ref([
   }
 ]);
 
-watch(() => accessLibreStore.state.erpsCount, (newData) => {
-  erpsCount.value = newData;
-  items.value[1].badge = newData;
+watch(() => accessLibreStore.state.erpsCount, (value) => {
+  erpsCount.value = value;
+  items.value[1].badge = value;
 });
-
-// erpsCount.value = accessLibreStore.state.erpsCount;
 
 </script>
 
@@ -70,7 +68,3 @@ watch(() => accessLibreStore.state.erpsCount, (newData) => {
   </PrimeMenubar>
 
 </template>
-
-<style scoped>
-
-</style>

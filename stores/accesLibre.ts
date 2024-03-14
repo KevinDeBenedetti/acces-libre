@@ -41,7 +41,7 @@ export const useAccessLibreStore = defineStore('access-libre', () => {
     })
   }
 
-  async function getActivitiesByTown(town: string) {
+  async function getActivitiesByTown(town: any) {
     try {
       const response: any = await $fetch(`${apiUrlAccesLibre}/activites/?commune=${town}`, { headers: {'Authorization': apiKey}});
       const actvitiesArray: any = response.results;
@@ -53,9 +53,9 @@ export const useAccessLibreStore = defineStore('access-libre', () => {
     }
   }
 
-  async function getERPSCountByPostalCode(postalCode: number) {
+  async function getERPSCount(inseeCode: any) {
     try {
-      const response: any = await $fetch(`${apiUrlAccesLibre}/erps/?code_postal=${postalCode}`, { headers: {'Authorization': apiKey} });
+      const response: any = await $fetch(`${apiUrlAccesLibre}/erps/?code_insee=${inseeCode}`, { headers: {'Authorization': apiKey} });
 
       setERPSCount(response.count);
     } catch(error) {
@@ -64,10 +64,10 @@ export const useAccessLibreStore = defineStore('access-libre', () => {
     }
   }
 
-  async function* getERPSbyPostalCode(postalCode: number) {
+  async function* getERPSbyPostalCode(codeInsee: number) {
     const erps: any = [];
     try {
-      const responseERPS: any = await $fetch(`${apiUrlAccesLibre}/erps/?code_postal=${postalCode}`, { headers: {'Authorization': apiKey} });
+      const responseERPS: any = await $fetch(`${apiUrlAccesLibre}/erps/?code_insee=${codeInsee}`, { headers: {'Authorization': apiKey} });
       const response: any = responseERPS;
 
       erps.value = response.results;
@@ -119,7 +119,7 @@ export const useAccessLibreStore = defineStore('access-libre', () => {
   }
 
   return {
-    getERPSCountByPostalCode,
+    getERPSCount,
     getERPSbyPostalCode,
     getCategoriesOfERPS,
     getActivitiesByTown,

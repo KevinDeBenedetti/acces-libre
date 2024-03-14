@@ -2,23 +2,31 @@ import { defineStore } from 'pinia'
 
 export const useMapStore = defineStore('mapStore', () => {
   const state = reactive({
+    mapLocation: null as [] | null,
+    codeInsee: null as number | null,
+
     postalCode: null as number | null,
     townName: null as string | null,
-    latitude: null as number | null,
-    longitude: null as number | null
+    markerInfo: null as string | null,
   });
 
-  function setGeoInfo(value: any) {
-    state.townName = value.town;
-    state.postalCode = value.postcode;
+  function setCodeInsee(code: number) {
+    state.codeInsee = code;
+  }
+  function setTownName(value: string) {
+    state.townName = value;
   }
 
-  function setLatitude(value: number) {
-    state.latitude = value
+  function setMapLocation(value: any) {
+    state.mapLocation = value
   }
 
-  function setLongitude(value: number) {
-    state.longitude = value
+  async function getTown(value: string) {
+    const response: any = await $fetch(`https://geo.api.gouv.fr/communes?nom=${value}&fields=nom,code,codesPostaux,siren,centre,mairie,codeEpci,codeDepartement,codeRegion,population&format=json&geometry=centre`);
+
+    const townCoordinates = response[0].mairie.coordinates.reverse();
+
+    setMapLocation(townCoordinates);
   }
 
   async function searchTown(query: string) {
@@ -33,14 +41,8 @@ export const useMapStore = defineStore('mapStore', () => {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          setLatitude(latitude);
-
-          setLongitude(longitude);
-
-          resolve({ latitude, longitude });
+          const coordinates = [position.coords.latitude, position.coords.longitude];
+          resolve({ coordinates });
         },
         (error) => {
           reject(error);
@@ -48,30 +50,33 @@ export const useMapStore = defineStore('mapStore', () => {
     })
   }
 
-  async function reverseGeoCode(latitude: number, longitude: number) {
+  async function reverseGeoCode(coordinates: any) {
     try {
-/*      const { data } = await useAsyncData(() => $fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`));*/
+      const latitude = coordinates[0];
+      const longitude = coordinates[1];
 
-      const response: any = await $fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+      const response: any = await $fetch(`https://geo.api.gouv.fr/communes?lat=${latitude}&lon=${longitude}&fields=nom,code,codesPostaux,centre,mairie,codeEpci,codeDepartement,codeRegion,population&format=json&geometry=centre`);
 
-      setGeoInfo(response.address);
+      const townCoordinates = response[0].mairie.coordinates.reverse();
 
-      return {
-        town: response.address.town,
-        postCode: response.address.postcode,
-        displayName: response.display_name
+      if (!state.mapLocation) {
+        setMapLocation(townCoordinates);
       }
 
+      // setMapLocation(townCoordinates);
+      setTownName(response[0].nom);
+      setCodeInsee(response[0].code);
     } catch (error) {
       console.error(error)
     }
   }
 
-
   return {
     getPosition,
     reverseGeoCode,
     searchTown,
+    setMapLocation,
+    getTown,
     state
   };
 })
