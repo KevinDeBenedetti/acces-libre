@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-
 const accessLibreStore = useAccessLibreStore();
 const mapStore = useMapStore();
 
-const categories: any = ref(null);
 const erps: any = ref(null);
 const erpsCount: any = ref(null);
 const townName: any = ref(null);
@@ -23,17 +20,13 @@ onMounted(async () => {
   for await (const chunk of erpsGenerator) {
     erps.value = [...chunk];
   }
-
-  // await accessLibreStore.getCategoriesOfERPS();
-  // categories.value = accessLibreStore.state.categories;
-  // console.log(categories.value);
 });
 </script>
 
 <template>
-  <div class="sm:w-4/5 mx-auto h-screen">
+  <div class="sm:w-4/5 mx-auto">
 
-    <div v-if="erps === null || erps.length === 0" class="flex justify-center items-center h-3/5">
+    <div v-if="erps === null || erps.length === 0" class="flex justify-center items-center h-screen">
       <PrimeProgressSpinner />
     </div>
 
@@ -100,7 +93,3 @@ onMounted(async () => {
 
   </div>
 </template>
-
-<style scoped>
-
-</style>

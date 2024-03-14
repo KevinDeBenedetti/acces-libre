@@ -1,5 +1,8 @@
 <script setup lang="ts">
-
+useSeoMeta({
+  title: "Accès Libre | Établissements",
+  description: "Liste des établissements."
+});
 </script>
 
 <template>

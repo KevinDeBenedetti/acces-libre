@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useMapStore } from '~/stores/map';
-import { useAccessLibreStore } from '~/stores/accesLibre';
-
 const mapStore = useMapStore();
 const accessLibreStore = useAccessLibreStore();
 

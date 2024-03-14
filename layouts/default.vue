@@ -7,9 +7,5 @@
   <main class="pt-10">
     <NuxtPage />
   </main>
-
+  <AppFooter />
 </template>
-
-<style scoped>
-
-</style>
